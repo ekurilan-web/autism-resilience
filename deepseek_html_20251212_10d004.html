@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>מחוסר לחוסן | חוויה אינטראקטיבית</title>
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <meta property="og:title" content="🎭 מה מסתתר מאחורי המסכה?" />
+  <meta property="og:description" content="חוויה אינטראקטיבית: מסע קצר אל עבר חוסן אוטיסטי אותנטי" />
+  
+  <!-- קישור לקובץ CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient-glow" id="ambientGlow"></div>
+
+  <div class="header-area">
+    <h1 class="title" id="mainTitle">מסיכה או חוסן?</h1>
+    <p class="subtitle" id="subTitle">הקישו על המסכה (פעמיים) כדי לגלות</p>
+    <div class="instruction-pill" id="instruction">הקישו על העיגולים לגלות את שלושת מרחבי החוסן האוטיסטי 👇</div>
+  </div>
+  <div class="container">
+    <div class="scene">
+      <div class="character-wrapper" id="character">
+        <svg class="person-svg" viewBox="0 0 160 250">
+          <defs>
+            <linearGradient id="maskGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f1f5f9"/><stop offset="100%" stop-color="#cbd5e1"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="80" cy="210" rx="50" ry="60" fill="#475569"/>
+          <g id="faceGroup">
+            <ellipse cx="80" cy="80" rx="42" ry="50" fill="#e2e8f0"/>
+            <g class="face-features" id="realFeatures">
+              <path class="smile-path" id="smile" d="M 65 95 Q 80 90 95 95" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+              <g class="eyes"><circle cx="62" cy="75" r="4" fill="#1e293b"/><circle cx="98" cy="75" r="4" fill="#1e293b"/></g>
+              <ellipse class="blush" cx="55" cy="85" rx="6" ry="4" fill="#fda4af"/><ellipse class="blush" cx="105" cy="85" rx="6" ry="4" fill="#fda4af"/>
+            </g>
+          </g>
+          <g class="mask-group" id="maskGroup" style="cursor: pointer;">
+            <path class="fragment" d="M 80 30 L 38 45 L 38 80 L 80 80 Z" fill="url(#maskGrad)" stroke="#94a3b8" stroke-width="0.5"/>
+            <path class="fragment" d="M 80 30 L 122 45 L 122 80 L 80 80 Z" fill="url(#maskGrad)" stroke="#94a3b8" stroke-width="0.5"/>
+            <path class="fragment" d="M 38 80 L 60 120 L 80 100 L 80 80 Z" fill="url(#maskGrad)" stroke="#94a3b8" stroke-width="0.5"/>
+            <path class="fragment" d="M 122 80 L 100 120 L 80 100 L 80 80 Z" fill="url(#maskGrad)" stroke="#94a3b8" stroke-width="0.5"/>
+            <path class="fragment" d="M 60 120 L 80 135 L 100 120 L 80 100 Z" fill="url(#maskGrad)" stroke="#94a3b8" stroke-width="0.5"/>
+            <g class="fragment" id="fakeFace">
+              <path d="M 60 100 Q 80 110 100 100" fill="none" stroke="#94a3b8" stroke-width="2"/>
+              <circle cx="60" cy="70" r="3" fill="#94a3b8"/><circle cx="100" cy="70" r="3" fill="#94a3b8"/>
+            </g>
+            <path class="crack" id="crack1" d="M 80 30 L 80 80" />
+            <path class="crack" id="crack2" d="M 38 80 L 122 80" />
+            <path class="crack" id="crack3" d="M 80 80 L 60 120" />
+            <path class="crack" id="crack4" d="M 80 80 L 100 120" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="rhizome-overlay" id="rhizomeSystem">
+        <svg width="100%" height="100%" viewBox="0 0 380 380" style="overflow: visible;">
+          <g id="rootsLayer"></g>
+          <g id="nodesLayer"></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer" id="footer">
+    <a href="https://rehab2026.form-wizard.co.il/" class="cta-btn" target="_blank">
+      <span>להרשמה לסדנה</span>
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <p style="margin-top: 10px; font-size: 0.8rem; color: #64748b; padding: 0 20px;">
+      מחוסר לחוסן: המשגה נוירואפירמטיבית בכנס השיקומי
+    </p>
+    <button class="reset-btn" onclick="resetExperience()">🔄 להתחיל מחדש</button>
+  </div>
+
+  <div class="popup-overlay" id="popup">
+    <div class="popup-card">
+      <div class="popup-tag" id="pTag">קטגוריה</div>
+      <h3 class="popup-title" id="pTitle">כותרת</h3>
+      <p class="popup-subtitle" id="pSubtitle">כותרת משנה</p>
+      <p class="popup-desc" id="pDesc">הסבר</p>
+      <button class="close-btn" onclick="closePopup()">סגירה</button>
+    </div>
+  </div>
+
+  <!-- קישור לקובץ JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
