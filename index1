@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>מחוסר לחוסן | חוויה אינטראקטיבית</title>
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <meta property="og:title" content="🎭 מה מסתתר מאחורי המסכה?" />
+  <meta property="og:description" content="חוויה אינטראקטיבית: מסע קצר אל עבר חוסן אוטיסטי אותנטי" />
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #020617 0%, #1e1b4b 50%, #111827 100%);
+      --accent-purple: #a78bfa;
+      --accent-blue: #38bdf8;
+      --accent-gold: #fbbf24;
+    }
+
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent; 
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      -webkit-text-size-adjust: 100%;
+      touch-action: manipulation;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      background: var(--bg-gradient);
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center;
+      padding: 1rem; 
+      overflow: hidden; 
+      color: #e2e8f0;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .container {
+      position: relative; 
+      max-width: 500px; 
+      width: 100%; 
+      height: 100%;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center;
+    }
+    
+    /* Header */
+    .header-area {
+      position: absolute; 
+      top: max(20px, env(safe-area-inset-top));
+      width: 100%; 
+      text-align: center; 
+      z-index: 20; 
+      pointer-events: none;
+      padding: 0 1rem;
+    }
+    
+    .title {
+      font-size: clamp(1.5rem, 6vw, 2rem); 
+      font-weight: 800; 
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to bottom, #f8fafc, #94a3b8);
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent;
+      transition: opacity 0.5s;
+    }
+    .title.fade-out { opacity: 0; transform: translateY(-10px); }
+    
+    .subtitle { 
+      font-size: 1rem; 
+      color: #94a3b8; 
+      transition: opacity 0.5s; 
+    }
+    
+    .instruction-pill {
+      margin-top: 1rem; 
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1); 
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);
+      padding: 0.5rem 1rem; 
+      border-radius: 99px; 
+      font-size: 0.85rem;
+      color: var(--accent-gold); 
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      opacity: 0; 
+      transform: translateY(10px); 
+      transition: all 0.6s ease;
+      pointer-events: none;
+    }
+    .instruction-pill.show { 
+      opacity: 1; 
+      transform: translateY(0); 
+      animation: pulse-gold 2s infinite; 
+    }
+    
+    @keyframes pulse-gold { 
+      50% { 
+        box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); 
+      } 
+    }
+    
+    /* Scene */
+    .scene { 
+      position: relative; 
+      width: 300px; 
+      height: 400px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      z-index: 10; 
+    }
+    
+    .character-wrapper {
+      position: relative; 
+      width: 160px; 
+      height: 250px;
+      transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); 
+      cursor: pointer;
+      -webkit-touch-callout: none;
+    }
+    .character-wrapper.shrunk { 
+      transform: scale(0.55) translateY(-30px); 
+    }
+
+    .person-svg { 
+      width: 100%; 
+      height: 100%; 
+      overflow: visible; 
+    }
+
+    /* Mask Animation */
+    .mask-group { 
+      transform-origin: center 80px; 
+      transition: transform 0.1s; 
+    }
+    .shake { 
+      animation: shake-hard 0.4s both; 
+    }
+    @keyframes shake-hard { 
+      10%, 90% { 
+        transform: translate3d(-2px, 0, 0) rotate(-1deg); 
+      }
+      50% { 
+        transform: translate3d(3px, 0, 0) rotate(2deg); 
+      }
+    }
+
+    .fragment { 
+      transition: all 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045); 
+      transform-origin: center; 
+    }
+    .fragment.fall { 
+      opacity: 0; 
+    }
+    .fragment.fall:nth-child(1) { 
+      transform: translate(-50px, 150px) rotate(-120deg); 
+    }
+    .fragment.fall:nth-child(2) { 
+      transform: translate(50px, 140px) rotate(100deg); 
+    }
+    .fragment.fall:nth-child(3) { 
+      transform: translate(-30px, 180px) rotate(-40deg); 
+    }
+    .fragment.fall:nth-child(4) { 
+      transform: translate(40px, 170px) rotate(60deg); 
+    }
+    .fragment.fall:nth-child(5) { 
+      transform: translate(0px, 160px) rotate(180deg); 
+    }
+
+    /* Face */
+    .face-features { 
+      opacity: 0; 
+      transition: opacity 0.5s ease; 
+    }
+    .face-features.visible { 
+      opacity: 1; 
+    }
+    .smile-path { 
+      transition: d 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+    }
+    .smiling .eyes { 
+      transform: scaleY(0.8); 
+      transform-origin: center 75px; 
+      transition: transform 0.5s; 
+    }
+    .blush { 
+      opacity: 0; 
+      transition: opacity 1s ease 0.5s; 
+    }
+    .smiling .blush { 
+      opacity: 0.5; 
+    }
+
+    .crack { 
+      fill: none; 
+      stroke: #fff; 
+      stroke-width: 1.5; 
+      stroke-dasharray: 50; 
+      stroke-dashoffset: 50; 
+      opacity: 0.8; 
+      filter: drop-shadow(0 0 2px #a78bfa); 
+    }
+    .crack.active { 
+      animation: drawCrack 0.3s forwards; 
+    }
+    @keyframes drawCrack { 
+      to { 
+        stroke-dashoffset: 0; 
+      } 
+    }
+
+    /* Rhizome */
+    .rhizome-overlay {
+      position: absolute; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%);
+      width: 380px; 
+      height: 380px; 
+      pointer-events: none; 
+      opacity: 0; 
+      transition: opacity 1s ease;
+    }
+    .rhizome-overlay.active { 
+      opacity: 1; 
+      pointer-events: auto; 
+    }
+
+    .root-path {
+      fill: none; 
+      stroke-width: 2; 
+      stroke-linecap: round; 
+      stroke-dasharray: 400; 
+      stroke-dashoffset: 400;
+      filter: drop-shadow(0 0 3px currentColor); 
+      transition: stroke-dashoffset 2s ease-out;
+    }
+    .root-path.grow { 
+      stroke-dashoffset: 0; 
+    }
+
+    /* Nodes */
+    .node-group { 
+      opacity: 0; 
+      transform: scale(0); 
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      cursor: pointer; 
+    }
+    .node-group.appear { 
+      opacity: 1; 
+      transform: scale(1); 
+    }
+    .node-circle { 
+      r: 28; /* הגדלת הרדיוס לעיגולים */
+      fill: #1e293b; 
+      stroke-width: 2; 
+    }
+    .node-text { 
+      fill: white; 
+      font-size: 9px; /* הקטנת הגופן */
+      font-weight: 700; 
+      text-anchor: middle; 
+      dominant-baseline: middle; 
+      pointer-events: none; 
+    }
+    
+    /* כיתוב לממדים (הקשתות החיצוניות) */
+    .dimension-label {
+      fill: currentColor;
+      font-size: 10px;
+      font-weight: 800;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      opacity: 0.9;
+    }
+
+    /* Popup */
+    .popup-overlay {
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%;
+      background: rgba(0,0,0,0.8); 
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px); 
+      z-index: 50;
+      opacity: 0; 
+      pointer-events: none; 
+      transition: opacity 0.3s;
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 1.5rem;
+    }
+    .popup-overlay.open { 
+      opacity: 1; 
+      pointer-events: auto; 
+    }
+    
+    .popup-card {
+      background: #0f172a; 
+      border: 1px solid rgba(255,255,255,0.1); 
+      border-radius: 20px;
+      padding: 1.5rem; 
+      max-width: 340px; 
+      text-align: center;
+      transform: translateY(20px); 
+      transition: transform 0.3s;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+      position: relative;
+      margin-bottom: env(safe-area-inset-bottom, 0);
+    }
+    .popup-overlay.open .popup-card { 
+      transform: translateY(0); 
+    }
+
+    .popup-tag { 
+      font-size: 0.7rem; 
+      padding: 0.2rem 0.6rem; 
+      border-radius: 10px; 
+      display: inline-block; 
+      margin-bottom: 0.8rem; 
+      font-weight: bold; 
+      border: 1px solid currentColor; 
+    }
+    .popup-title { 
+      font-size: 1.3rem; 
+      font-weight: 800; 
+      margin-bottom: 0.2rem; 
+      color: white; 
+    }
+    .popup-subtitle { 
+      color: #94a3b8; 
+      font-size: 0.9rem; 
+      margin-bottom: 1rem; 
+      font-style: italic; 
+    }
+    .popup-desc { 
+      color: #cbd5e1; 
+      line-height: 1.6; 
+      font-size: 0.9rem; 
+      margin-bottom: 1.5rem; 
+      text-align: right; 
+    }
+    .close-btn { 
+      background: rgba(255,255,255,0.1); 
+      color: white; 
+      border: none; 
+      padding: 0.6rem 2rem; 
+      border-radius: 99px; 
+      cursor: pointer; 
+      font-size: 1rem;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    /* Footer */
+    .footer { 
+      position: absolute; 
+      bottom: max(2rem, env(safe-area-inset-bottom)); 
+      width: 100%; 
+      text-align: center; 
+      opacity: 0; 
+      transform: translateY(20px); 
+      transition: all 1s ease 1s; 
+      z-index: 30; 
+      padding: 0 1rem;
+    }
+    .footer.show { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+    .cta-btn {
+      display: inline-flex; 
+      align-items: center; 
+      gap: 0.5rem;
+      background: var(--accent-gold); 
+      color: #0f172a; 
+      text-decoration: none;
+      padding: 0.8rem 1.5rem; 
+      border-radius: 99px; 
+      font-weight: 700;
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); 
+      transition: transform 0.2s;
+      -webkit-tap-highlight-color: rgba(251, 191, 36, 0.3);
+    }
+    .cta-btn:hover { 
+      transform: scale(1.05); 
+    }
+    
+    .reset-btn {
+      display: block; 
+      margin: 15px auto 0; 
+      background: transparent; 
+      color: #64748b;
+      border: 1px solid #334155; 
+      padding: 0.5rem 1.2rem; 
+      border-radius: 99px;
+      font-size: 0.8rem; 
+      cursor: pointer; 
+      transition: all 0.3s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .reset-btn:hover { 
+      background: rgba(255,255,255,0.05); 
+      color: #94a3b8; 
+      border-color: #475569; 
+    }
+
+    .ambient-glow {
+      position: absolute; 
+      width: 100vw; 
+      height: 100vh; 
+      pointer-events: none; 
+      z-index: 1;
+      background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.1), transparent 60%);
+      transition: all 2s ease;
+    }
+    .ambient-glow.active { 
+      background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.2), rgba(56, 189, 248, 0.1), transparent 70%); 
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-glow" id="ambientGlow"></div>
+
+  <div class="header-area">
+    <h1 class="title" id="mainTitle">מסיכה או חוסן?</h1>
+    <p class="subtitle" id="subTitle">הקישו על המסכה (פעמיים) כדי לגלות</p>
+    <div class="instruction-pill" id="instruction">הקישו על העיגולים לגלות את שלושת מרחבי החוסן האוטיסטי 👇</div>
+  </div>
+  <div class="container">
+    <div class="scene">
+      <div class="character-wrapper" id="character">
+        <svg class="person-svg" viewBox="0 0 160 250">
+          <defs>
+            <linearGradient id="maskGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f1f5f9"/><stop offset="100%" stop-color="#cbd5e1"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="80" cy="210" rx="50" ry="60" fill="#475569"/>
+          <g id="faceGroup">
+            <ellipse cx="80" cy="80" rx="42" ry="50" fill="#e2e8f0"/>
+            <g class="face-features" id="realFeatures">
+              <path class="smile-path" id="smile" d="M 65 95 Q 80 90 95 95" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+              <g class="eyes"><circle cx="62" cy="75" r="4" fill="#1e293b"/><circle cx="98" cy="75" r="4" fill="#1e293b"/></g>
+              <ellipse class="blush" cx="55" cy="85" rx="6" ry="4" fill="#fda4af"/><ellipse class="blush" cx="105" cy="85" rx="6" ry="4" fill="#fda4af"/>
+            </g>
+          </g>
+          <g class="mask-group" id="maskGroup" style="cursor: pointer;">
+            <path class="fragment" d="M 80 30 L 38 45 L 38 80 L 80 80 Z" fill="url(#maskGrad)" stroke="#94a3b8" stroke-width="0.5"/>
+            <path class="fragment" d="M 80 30 L 122 45 L 122 80 L 80 80 Z" fill="url(#maskGrad)" stroke="#94a3b8" stroke-width="0.5"/>
+            <path class="fragment" d="M 38 80 L 60 120 L 80 100 L 80 80 Z" fill="url(#maskGrad)" stroke="#94a3b8" stroke-width="0.5"/>
+            <path class="fragment" d="M 122 80 L 100 120 L 80 100 L 80 80 Z" fill="url(#maskGrad)" stroke="#94a3b8" stroke-width="0.5"/>
+            <path class="fragment" d="M 60 120 L 80 135 L 100 120 L 80 100 Z" fill="url(#maskGrad)" stroke="#94a3b8" stroke-width="0.5"/>
+            <g class="fragment" id="fakeFace">
+              <path d="M 60 100 Q 80 110 100 100" fill="none" stroke="#94a3b8" stroke-width="2"/>
+              <circle cx="60" cy="70" r="3" fill="#94a3b8"/><circle cx="100" cy="70" r="3" fill="#94a3b8"/>
+            </g>
+            <path class="crack" id="crack1" d="M 80 30 L 80 80" />
+            <path class="crack" id="crack2" d="M 38 80 L 122 80" />
+            <path class="crack" id="crack3" d="M 80 80 L 60 120" />
+            <path class="crack" id="crack4" d="M 80 80 L 100 120" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="rhizome-overlay" id="rhizomeSystem">
+        <svg width="100%" height="100%" viewBox="0 0 380 380" style="overflow: visible;">
+          <g id="rootsLayer"></g>
+          <g id="nodesLayer"></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer" id="footer">
+    <a href="https://rehab2026.form-wizard.co.il/" class="cta-btn" target="_blank">
+      <span>להרשמה לסדנה</span>
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <p style="margin-top: 10px; font-size: 0.8rem; color: #64748b; padding: 0 20px;">
+      מחוסר לחוסן: המשגה נוירואפירמטיבית בכנס השיקומי
+    </p>
+    <button class="reset-btn" onclick="resetExperience()">🔄 להתחיל מחדש</button>
+  </div>
+
+  <div class="popup-overlay" id="popup">
+    <div class="popup-card">
+      <div class="popup-tag" id="pTag">קטגוריה</div>
+      <h3 class="popup-title" id="pTitle">כותרת</h3>
+      <p class="popup-subtitle" id="pSubtitle">כותרת משנה</p>
+      <p class="popup-desc" id="pDesc">הסבר</p>
+      <button class="close-btn" onclick="closePopup()">סגירה</button>
+    </div>
+  </div>
+
+  <script>
+    // Audio Context
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+    let audioInitialized = false;
+
+    function initAudioOnFirstTouch() {
+      if (!audioInitialized) {
+        if (!audioCtx) {
+          audioCtx = new AudioCtx();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        audioInitialized = true;
+        
+        document.removeEventListener('touchstart', initAudioOnFirstTouch);
+        document.removeEventListener('click', initAudioOnFirstTouch);
+      }
+    }
+
+    document.addEventListener('touchstart', initAudioOnFirstTouch, { once: true });
+    document.addEventListener('click', initAudioOnFirstTouch, { once: true });
+
+    function playCrackSound() {
+      if (!audioCtx) initAudioOnFirstTouch();
+      if (!audioCtx) return;
+      
+      try {
+        const osc = audioCtx.createOscillator(); 
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth'; 
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime); 
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.connect(gain); 
+        gain.connect(audioCtx.destination); 
+        osc.start(); 
+        osc.stop(audioCtx.currentTime + 0.15);
+      } catch (e) {
+        console.log("Audio error:", e);
+      }
+    }
+
+    function playAmbienceChord() {
+      if (!audioCtx) initAudioOnFirstTouch();
+      if (!audioCtx) return;
+      
+      try {
+        const notes = [261.63, 329.63, 392.00, 523.25];
+        notes.forEach((freq, i) => {
+          setTimeout(() => {
+            const osc = audioCtx.createOscillator(); 
+            const gain = audioCtx.createGain();
+            osc.type = 'sine'; 
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 1);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 6);
+            osc.connect(gain); 
+            gain.connect(audioCtx.destination); 
+            osc.start(); 
+            osc.stop(audioCtx.currentTime + 6);
+          }, i * 150);
+        });
+      } catch (e) {
+        console.log("Audio error:", e);
+      }
+    }
+
+    function triggerHaptic(pattern) { 
+      if (navigator.vibrate) {
+        try {
+          navigator.vibrate(pattern);
+        } catch (e) {}
+      }
+    }
+
+    const els = {
+      maskGroup: document.getElementById('maskGroup'), 
+      cracks: document.querySelectorAll('.crack'),
+      fragments: document.querySelectorAll('.fragment'), 
+      character: document.getElementById('character'),
+      realFeatures: document.getElementById('realFeatures'), 
+      smile: document.getElementById('smile'),
+      rhizome: document.getElementById('rhizomeSystem'), 
+      rootsLayer: document.getElementById('rootsLayer'),
+      nodesLayer: document.getElementById('nodesLayer'), 
+      title: document.getElementById('mainTitle'),
+      subtitle: document.getElementById('subTitle'), 
+      instruction: document.getElementById('instruction'),
+      footer: document.getElementById('footer'), 
+      ambient: document.getElementById('ambientGlow')
+    };
+
+    let phase = 0;
+    let lastTouchTime = 0;
+
+    function preventDoubleTapZoom(e) {
+      const now = Date.now();
+      if (now - lastTouchTime < 300) {
+        e.preventDefault();
+      }
+      lastTouchTime = now;
+    }
+
+    els.maskGroup.addEventListener('touchstart', function(e) {
+      if (e.touches.length > 1) return;
+      preventDoubleTapZoom(e);
+      handleMaskClick();
+      e.preventDefault();
+    }, { passive: false });
+
+    els.maskGroup.addEventListener('click', handleMaskClick);
+
+    function handleMaskClick() {
+      initAudioOnFirstTouch();
+      if (phase === 0) {
+        phase = 1; 
+        playCrackSound(); 
+        triggerHaptic([50]);
+        els.maskGroup.classList.add('shake'); 
+        els.cracks.forEach(c => c.classList.add('active'));
+        els.title.innerText = "המסכה נסדקת..."; 
+        els.subtitle.style.opacity = 0;
+      } else if (phase === 1) {
+        phase = 2; 
+        playCrackSound(); 
+        triggerHaptic([30, 50, 30, 50, 100]);
+        els.fragments.forEach(f => f.classList.add('fall'));
+        els.realFeatures.classList.add('visible');
+        els.title.classList.add('fade-out');
+        setTimeout(() => {
+          els.title.innerText = "חוסן אותנטי";
+          els.title.classList.remove('fade-out');
+        }, 600);
+        setTimeout(() => {
+          els.smile.setAttribute('d', 'M 65 95 Q 80 110 95 95');
+          document.body.classList.add('smiling');
+          els.character.classList.add('shrunk');
+          playAmbienceChord();
+          setTimeout(growRhizome, 800);
+        }, 600);
+      }
+    }
+
+    const dimensions = [
+      { id: 'agency', label: 'סוכנות', color: '#a78bfa', startAngle: -130, endAngle: -50 },
+      { id: 'recognition', label: 'הכרה', color: '#38bdf8', startAngle: 10, endAngle: 90 },
+      { id: 'justice', label: 'צדק מוגבלות', color: '#fbbf24', startAngle: 130, endAngle: 210 }
+    ];
+
+    const concepts = [
+      { 
+        id: 'identity', cat: 'סוכנות', label: 'זהות', subtitle: 'זהות אוטיסטית חיובית',
+        desc: 'חוסן כהכרה בערך הזהות האוטיסטית — לא כפגם שיש לתקן, אלא כדרך קיום לגיטימית ובעלת ערך.',
+        color: '#a78bfa', angle: -115 
+      },
+      { 
+        id: 'selfRep', cat: 'סוכנות', label: 'ייצוג עצמי', subtitle: 'הזכות לדבר בשם עצמי',
+        desc: 'חוסן כיכולת לייצג את עצמי, להגדיר את הצרכים שלי, ולהיות הקול המוביל בסיפור החיים שלי. הזכות לומר לא, להגדיר גבולות ולפעול מתוך רצון עצמי.',
+        color: '#a78bfa', angle: -65 
+      },
+      { 
+        id: 'mutualRec', cat: 'הכרה', label: 'הכרה הדדית', subtitle: 'מרחב אינטר-סובייקטיבי',
+        desc: 'חוסן התלוי בסביבה שמכירה באדם כסובייקט מלא. המעבר ממבט מתקן למבט מכיר ומאשש.',
+        color: '#38bdf8', angle: 25 
+      },
+      { 
+        id: 'moralThird', cat: 'הכרה', label: 'השלישי ההתיחסותי', subtitle: 'מרחב משותף של משמעות',
+        desc: 'חוסן הנובע מיצירת מרחב משותף בין אנשים, שבו שני הצדדים מכירים זה בזה ויוצרים יחד משמעות.',
+        color: '#38bdf8', angle: 75 
+      },
+      { 
+        id: 'pace', cat: 'צדק מוגבלות', label: 'קצב', subtitle: 'הקצב האוטיסטי',
+        desc: 'חוסן כהכרה בזמניות שונה: לגיטימציה לעיבוד, להתאוששות ולצמיחה בקצב אישי, ללא כפיית הקצב הנוירוטיפיקלי.',
+        color: '#fbbf24', angle: 145 
+      },
+      { 
+        id: 'access', cat: 'צדק מוגבלות', label: 'נגישות', subtitle: 'יצירת עתידים נגישים',
+        desc: 'חוסן אינו רק באדם, אלא במערכת. האחריות ליצור סביבה המאפשרת השתתפות עוברת מהפרט לחברה.',
+        color: '#fbbf24', angle: 195 
+      }
+    ];
+
+    function growRhizome() {
+      els.rhizome.classList.add('active'); 
+      els.instruction.classList.add('show');
+      els.footer.classList.add('show'); 
+      els.ambient.classList.add('active');
+
+      // ציור הקשתות לממדים
+      dimensions.forEach((dim, i) => {
+        const startRad = (dim.startAngle * Math.PI) / 180;
+        const endRad = (dim.endAngle * Math.PI) / 180;
+        const arcRadius = 145;
+        const labelRadius = 165;
+        
+        const startX = 190 + Math.cos(startRad) * arcRadius;
+        const startY = 190 + Math.sin(startRad) * arcRadius;
+        const endX = 190 + Math.cos(endRad) * arcRadius;
+        const endY = 190 + Math.sin(endRad) * arcRadius;
+        
+        const arc = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        const largeArc = Math.abs(dim.endAngle - dim.startAngle) > 180 ? 1 : 0;
+        arc.setAttribute('d', `M ${startX} ${startY} A ${arcRadius} ${arcRadius} 0 ${largeArc} 1 ${endX} ${endY}`);
+        arc.setAttribute('stroke', dim.color);
+        arc.setAttribute('stroke-width', '3');
+        arc.setAttribute('fill', 'none');
+        arc.setAttribute('opacity', '0.3');
+        arc.style.strokeDasharray = '300';
+        arc.style.strokeDashoffset = '300';
+        arc.style.transition = 'stroke-dashoffset 1.5s ease-out';
+        els.rootsLayer.appendChild(arc);
+        setTimeout(() => arc.style.strokeDashoffset = '0', i * 300);
+        
+        // תווית הממד
+        const midAngle = ((dim.startAngle + dim.endAngle) / 2) * Math.PI / 180;
+        const labelX = 190 + Math.cos(midAngle) * labelRadius;
+        const labelY = 190 + Math.sin(midAngle) * labelRadius;
+        
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute('x', labelX);
+        label.setAttribute('y', labelY);
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('dominant-baseline', 'middle');
+        label.setAttribute('fill', dim.color);
+        label.setAttribute('font-size', '11');
+        label.setAttribute('font-weight', '800');
+        label.setAttribute('opacity', '0');
+        label.style.transition = 'opacity 0.8s ease';
+        label.textContent = dim.label;
+        
+        els.nodesLayer.appendChild(label);
+        setTimeout(() => label.setAttribute('opacity', '0.9'), 500 + i * 300);
+      });
+
+      // ציור עיגולים וטקסטים
+      concepts.forEach((c, i) => {
+        const rad = (c.angle * Math.PI) / 180;
+        const startX = 190, startY = 190;
+        const endX = 190 + Math.cos(rad) * 110;
+        const endY = 190 + Math.sin(rad) * 110;
+        const midX = (startX + endX) / 2 + (Math.random()*30 - 15);
+        const midY = (startY + endY) / 2 + (Math.random()*30 - 15);
+
+        // ציור הקו
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute('d', `M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`);
+        path.setAttribute('stroke', c.color); 
+        path.classList.add('root-path');
+        setTimeout(() => path.classList.add('grow'), 600 + i * 200);
+        els.rootsLayer.appendChild(path);
+
+        // יצירת קבוצת העיגול
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute('class', 'node-group');
+        g.style.cursor = 'pointer';
+        
+        g.addEventListener('click', (e) => { 
+          e.stopPropagation(); 
+          openPopup(c); 
+        });
+        
+        g.addEventListener('touchstart', (e) => { 
+          if (e.touches.length === 1) {
+            e.preventDefault();
+            e.stopPropagation();
+            openPopup(c);
+          }
+        }, { passive: false });
+
+        // העיגול
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute('cx', endX); 
+        circle.setAttribute('cy', endY);
+        circle.setAttribute('r', '28'); // רדיוס מוגדל
+        circle.setAttribute('fill', '#1e293b');
+        circle.setAttribute('stroke', c.color); 
+        circle.setAttribute('stroke-width', '2');
+        
+        // הטקסט - ללא פיצול לשורות
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute('x', endX); 
+        text.setAttribute('y', endY);
+        text.setAttribute('class', 'node-text');
+        text.setAttribute('font-size', '9'); // גופן קטן יותר
+        
+        // טקסט רגיל (ללא \n)
+        text.textContent = c.label;
+        
+        // מיקום טקסט מדויק יותר
+        if (c.label.length > 6) { // אם הטקסט ארוך יותר מ-6 תווים
+          text.setAttribute('font-size', '8'); // גופן עוד יותר קטן
+        }
+        
+        g.append(circle, text);
+        setTimeout(() => g.classList.add('appear'), 1200 + (i * 200));
+        els.nodesLayer.appendChild(g);
+      });
+    }
+
+    const popup = document.getElementById('popup');
+    function openPopup(c) {
+      document.getElementById('pTag').innerText = c.cat;
+      document.getElementById('pTag').style.color = c.color;
+      document.getElementById('pTitle').innerText = c.label;
+      document.getElementById('pSubtitle').innerText = c.subtitle;
+      document.getElementById('pDesc').innerText = c.desc;
+      popup.classList.add('open'); 
+      triggerHaptic(10);
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closePopup() { 
+      popup.classList.remove('open'); 
+      document.body.style.overflow = '';
+    }
+    
+    popup.addEventListener('touchstart', function(e) {
+      if (e.target === this) {
+        closePopup();
+      }
+    });
+    
+    function resetExperience() {
+      phase = 0;
+      
+      els.title.innerText = "מסיכה או חוסן?";
+      els.subtitle.innerText = "הקישו על המסכה (פעמיים) כדי לגלות";
+      els.subtitle.style.opacity = 1;
+      els.title.classList.remove('fade-out');
+      
+      els.maskGroup.classList.remove('shake');
+      els.cracks.forEach(c => c.classList.remove('active'));
+      els.fragments.forEach(f => f.classList.remove('fall'));
+      
+      els.realFeatures.classList.remove('visible');
+      els.smile.setAttribute('d', 'M 65 95 Q 80 90 95 95');
+      document.body.classList.remove('smiling');
+      
+      els.character.classList.remove('shrunk');
+      
+      els.rhizome.classList.remove('active');
+      els.rootsLayer.innerHTML = '';
+      els.nodesLayer.innerHTML = '';
+      
+      els.instruction.classList.remove('show');
+      els.footer.classList.remove('show');
+      
+      els.ambient.classList.remove('active');
+      
+      closePopup();
+    }
+  </script>
+</body>
+</html>
